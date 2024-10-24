@@ -22,7 +22,14 @@ patch(PaymentScreen.prototype, {
                 order.remove_paymentline(order.selected_paymentline)
             }
         }
+        
         this.observer_for_insert_listener();
+        //detecta si es el unico meto de pago entonces mostrar
+        if(this.pos.config.payment_method_ids.length == 1){
+            this.payment_method_detected = false;
+            this.qr_painted = false;
+            this.payment_device_paint();
+        }
     },
 
     observer_for_insert_listener(){

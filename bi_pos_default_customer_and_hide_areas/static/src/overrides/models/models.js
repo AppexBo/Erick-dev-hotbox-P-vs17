@@ -90,6 +90,12 @@ patch(Order.prototype, {
 
             const button_validate = main_content.querySelector('.button.next.validation.btn.btn-primary');
             button_validate.setAttribute('style', 'display: none !important;');
+
+        }else{
+            const switchpane = document.querySelector('.switchpane.d-flex.h-12');
+            if(switchpane && !switchpane.hasAttribute('style')){
+                switchpane.setAttribute('style', 'display: none !important;');
+            }
         }
     },
 
@@ -110,7 +116,7 @@ patch(Order.prototype, {
         //const html_add = '<div class="pos-branding d-flex justify-content-start flex-grow-1 h-100 p-0 my-0 text-start" style="max-width: 100% !important; width: 100% !important;"><img class="pos-logo h-75 ms-3 me-auto align-self-center" src="/web/static/img/logo.png" alt="Logo" style="display: none;"><div class="d-flex flex-md-row align-items-center justify-content-center" style="width: 100%;"><span class="mt-3 mt-md-0 ms-md-3 text-center" style="font-size: 24px; font-weight: bold;">POR FAVOR, ESCANEE SUS PRODUCTOS</span><img src="/bi_pos_default_customer_and_hide_areas/static/description/logo_hotbox.jpg" alt="NewLogo" class="img-fluid" style="max-width: 150px;"></div></div>';
         const html_add = '<div class="pos-branding d-flex justify-content-start flex-grow-1 h-100 p-0 my-0 text-start" style="max-width: 100% !important; width: 100% !important;"><img class="pos-logo h-75 ms-3 me-auto align-self-center" src="/web/static/img/logo.png" alt="Logo" style="display: none;"><div class="d-flex flex-md-row align-items-center justify-content-center" style="width: 100%;"><img src="/bi_pos_default_customer_and_hide_areas/static/description/logo_hotbox.jpg" alt="NewLogo" class="img-fluid" style="max-width: 150px;"><span class="mt-3 mt-md-0 ms-md-3 text-center" style="font-size: 24px; font-weight: bold;">POR FAVOR, ESCANEE SUS PRODUCTOS</span></div></div>';
         // Insertar el HTML directamente
-        pos_branding.insertAdjacentHTML('beforeend', html_add);
+        pos_branding.insertAdjacentHTML('afterbegin', html_add);
     },
     
     changeLogoandAddText(){
@@ -121,6 +127,9 @@ patch(Order.prototype, {
             //buscar el campo donde esta el logo de odoo
             const pos_branding = mainContent.querySelector('.pos-branding');
             const pos_rightheader = mainContent.querySelector('.pos-rightheader');
+            //pasa que al poner grande la pantalla y luego cambias a movil se cachea el logo
+            const logo_cacheado = pos_rightheader.querySelector('.pos-branding.d-flex.justify-content-start.flex-grow-1');
+            
             if(pos_branding){
                 // Seleccionar el elemento img
                 const logo = pos_branding.querySelector('.pos-logo');
@@ -128,6 +137,10 @@ patch(Order.prototype, {
                 const have_styles = logo.hasAttribute('style');
                 
                 if (!have_styles) {
+                    // Si el div existe, lo elimina
+                    if (logo_cacheado) {
+                        logo_cacheado.remove();
+                    }
                     // Ocultar la imagen antigua
                     logo.style.display = 'none';
                     //dibujar el nuevo logo
@@ -173,6 +186,7 @@ patch(Order.prototype, {
     },
 
     paymentScreenHideCustomerAndFacturationZone() {
+        /*
         const mainContent = document.querySelector('.main-content.d-flex.overflow-auto.h-100');
         if (mainContent) {
             // Ocultar el div con la clase específica dentro del contenedor principal
@@ -188,11 +202,45 @@ patch(Order.prototype, {
                 }
             }
         }
+        */
+        const mainContent = document.querySelector('.main-content.d-flex.overflow-auto.h-100');
+        
+        if (mainContent) {
+            // Ocultar el div con la clase específica dentro del contenedor principal
+            const divToHide = mainContent.querySelector('.right-content.w-25.bg-400');
+            if (divToHide) {
+                this.hideCustomerAndFacturationZone(divToHide);
+            }
+        }
+        else {
+            const mainContent = document.querySelector('.payment-buttons.d-flex.flex-column.flex-wrap');
+            if (mainContent) {
+                this.hideCustomerAndFacturationZone(mainContent);
+            }
+        }
+    },
+
+    hideCustomerAndFacturationZone(zone){
+        // Verificar tiene el estilo none activado
+        const have_styles = zone.hasAttribute('style');
+        // Llamar a la función solo si el color de fondo no era rojo
+        if (!have_styles) {
+            //Simulo que el boton de factura fue presionado
+            this.simulateButtonClickFacturaccion();
+            //ocultar el campo
+            zone.setAttribute('style', 'display: none !important;');
+        }
     },
 
     simulateButtonClickFacturaccion() {
+        /*
         const button = document.querySelector('.button.js_invoice.btn.btn-light.py-3.text-start.rounded-0.border-bottom');
         if (button) {
+            button.click(); // Simula un clic en el botón de "Factura"
+        }
+        */
+        const button = document.querySelector('.button.js_invoice.btn.btn-light.py-3.text-start.rounded-0.border-bottom');
+        if ( button && !button.classList.contains('highlight') && !button.classList.contains('text-bg-primary') ) {
             button.click(); // Simula un clic en el botón de "Factura"
         }
     },
@@ -303,8 +351,6 @@ patch(Order.prototype, {
             // Aquí puedes continuar con la ejecución de otros scripts si es necesario
         }
     },
-
-
 
     sendAutomaticData(){
         // cuando precione el boton pago de pago se presionara send automaticamente
