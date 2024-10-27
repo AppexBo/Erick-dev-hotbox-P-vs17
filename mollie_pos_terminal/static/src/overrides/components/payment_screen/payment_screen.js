@@ -44,7 +44,7 @@ patch(PaymentScreen.prototype, {
     },
     
     async sendMollieStatusCheck(line) {
-        //console.log("entre a status check");
+        console.log("entre a status check");
         const payment_terminal = line.payment_method.payment_terminal;
         line.set_payment_status("waiting");
         await payment_terminal.send_mollie_status_check(

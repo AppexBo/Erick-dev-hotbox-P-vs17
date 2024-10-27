@@ -1,5 +1,5 @@
 {
-    'name': 'Linkser by AppexBolivia',
+    'name': 'Linkser by AppexBo',
     'version': '17.0.0.2',
     'description': '',
     'summary': 'Conecta la terminal de pago de linkser',

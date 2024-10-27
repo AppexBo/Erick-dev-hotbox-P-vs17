@@ -39,7 +39,7 @@ export class PaymentMollie extends PaymentInterface {
     get_payment_terminal_information_and_save(terminal_info, data){
         const mollie_uid = this.most_recent_mollie_uid;
         const jsonData = JSON.stringify(data, null, 2);
-        //console.log(jsonData);
+        console.log(jsonData);
         $.ajax({
             url: '/register_linkser_payment',
             method: 'POST',
@@ -53,10 +53,10 @@ export class PaymentMollie extends PaymentInterface {
                 }
             }),
             success: function(response) {
-                console.log('Solicitud exitosa');
+                console.log('Solicitud exitosa:', response);
             },
             error: function(xhr, status, error) {
-                console.log('Error en la solicitud');
+                console.error('Error en la solicitud:', status, error);
             }
         });
     }
@@ -74,11 +74,11 @@ export class PaymentMollie extends PaymentInterface {
                 }),
                 success: function(response) {
                     // Puedes hacer algo con la respuesta si es necesario
-                    //console.log(response);
+                    console.log(response);
                     resolve(response); // Devuelve 100 en caso de éxito
                 },
                 error: function(xhr, status, error) {
-                    //console.error('Error en la solicitud:', status, error);
+                    console.error('Error en la solicitud:', status, error);
                     resolve(null); // Devuelve null en caso de error
                 }
             });
@@ -99,11 +99,12 @@ export class PaymentMollie extends PaymentInterface {
             var moneda = "840";
         }
 
-        var URL_SET_SALE = "http://" + ip + ":" + puerto + "/sale?monto=";
+        //var URL_SET_SALE = "https://" + ip + ":" + puerto + "/sale?monto=";
+        var URL_SET_SALE = "https://" + ip + "/sale?monto=";
         var montoTran = monto;
         var cod_moneda = moneda;
         var urlSale = URL_SET_SALE + montoTran + "&cod_moneda=" + cod_moneda;
-    
+        debugger
         console.log(urlSale);
         //aqui alacenare el this ya que no llega al ajax
         const selfjs = this;
@@ -116,18 +117,14 @@ export class PaymentMollie extends PaymentInterface {
                 timeout: 60000,
                 context: { selfjs: selfjs },
                 success: function(dataresponse, statustext, response) {
+                    debugger
                     if(dataresponse.estado === "OK"){
                     //if(dataresponse.completed == false){
                         this.selfjs.pending_mollie_line().handle_payment_response(true);
                         this.selfjs.get_payment_terminal_information_and_save(terminal_information, dataresponse);
                         reject();
-                        //simulo que presione el boton de validar esto es solo para hotbox
-                        const buttonValidate = document.querySelector('.button.next.validation');
-                        if (buttonValidate) {
-                            buttonValidate.click(); // Simula un clic en el botón de "Factura"
-                        }
                     }else{
-                        //console.error('paaaaaa');
+                        console.error('paaaaaa');
                         this.selfjs._show_error(dataresponse.mensaje);
                         this.selfjs.pending_mollie_line().set_payment_status('retry');
                         //return Promise.resolve();
@@ -135,6 +132,7 @@ export class PaymentMollie extends PaymentInterface {
                     }
                 },
                 error: function(request, errorcode, errortext) {
+                    debugger
                     // Llama a tu método de manejo de errores aquí
                     this._handle_odoo_connection_failure({
                         request: request,
