@@ -18,7 +18,7 @@ patch(PaymentScreen.prototype, {
         // Verifica si hay una línea de pago seleccionada
         if (order.selected_paymentline) {
             // Elimina la línea de pago seleccionada
-            if(order.selected_paymentline.name == "QRRR"){
+            if(order.selected_paymentline.name == "QR"){
                 order.remove_paymentline(order.selected_paymentline)
             }
         }
@@ -38,7 +38,7 @@ patch(PaymentScreen.prototype, {
                 const paymentMethodDisplayElements = document.querySelectorAll('.payment-method-display');
                 paymentMethodDisplayElements.forEach(element => {
                     const paymentNameSpan = element.querySelector('.payment-name');
-                    if (paymentNameSpan && paymentNameSpan.textContent.trim() === "QRRR") {
+                    if (paymentNameSpan && paymentNameSpan.textContent.trim() === "QR") {
                         element.addEventListener('click', async() => {
                             this.payment_method_detected = false;
                             this.qr_painted = false;
@@ -60,7 +60,7 @@ patch(PaymentScreen.prototype, {
         const observer = new MutationObserver(async() => {
             const payment_method = this.pos.get_order().selected_paymentline;
             
-            if(payment_method && payment_method.payment_method.name == "QRRR" && this.payment_method_detected != true){
+            if(payment_method && payment_method.payment_method.name == "QR" && this.payment_method_detected != true){
                 if(this.pos.get_order().paymentlines.length<2){
                     this.payment_method_detected = true;
                     //llamar y mostrar el modal

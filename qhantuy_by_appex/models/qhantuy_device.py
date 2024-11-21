@@ -117,7 +117,7 @@ class QhantuyDevice(models.Model):
             "callback_url": "",
             "currency_code":"BOB",
             "internal_code": "ABC123",
-            "detail":"Miscellaneous",
+            "detail":"S-Mart Micromercados",
             "items": [{
                 "name": "Pago total",
                 "price": data,
