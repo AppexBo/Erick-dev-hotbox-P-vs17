@@ -28,6 +28,12 @@ patch(Order.prototype, {
             this.camposDeLaVistaUno(pos);
             //La vista dos es cuando se da al boton pagar del POS donde muestra los metodos de pago
             this.camposDeLaVistaDos();
+
+            //simulo que presione el boton de validar esto es solo para hotbox
+            const buttonValidate = document.querySelector('.button.next.validation');
+            if (buttonValidate && buttonValidate.textContent.trim() === "Nueva orden") {
+                buttonValidate.click(); // Simula un clic en el botón
+            }
         });
         
         // Observar cambios en el DOM dentro del contenedor principal
