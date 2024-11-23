@@ -29,10 +29,16 @@ patch(Order.prototype, {
             //La vista dos es cuando se da al boton pagar del POS donde muestra los metodos de pago
             this.camposDeLaVistaDos();
 
-            //simulo que presione el boton de validar esto es solo para hotbox
+            //simulo que presione el boton de validar esto es solo para hotbox para tablets grandes o medianas
             const buttonValidate = document.querySelector('.button.next.validation');
             if (buttonValidate && buttonValidate.textContent.trim() === "Nueva orden") {
                 buttonValidate.click(); // Simula un clic en el botón
+            }else{
+                //para tablets pequenas
+                const buttonValidate1 = document.querySelector('.btn-switchpane.validation-button');
+                if(buttonValidate1 && buttonValidate1.textContent.trim() === "Nueva orden"){
+                    buttonValidate1.click(); // Simula un clic en el botón
+                }
             }
         });
         
