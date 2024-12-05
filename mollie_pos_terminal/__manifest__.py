@@ -26,4 +26,5 @@
             'mollie_pos_terminal/static/**/*',
         ],
     },
+    'license': 'AGPL-3',
 }

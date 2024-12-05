@@ -9,7 +9,6 @@
     'company': 'AppexBo',
     'website': 'https://www.appexbo.com/',
     
-    
     'category': 'Point of Sale',
     'depends': [
         'point_of_sale',
@@ -22,4 +21,5 @@
             'qr_pos_terminal/static/**/*',
         ],
     },
+    'license': 'AGPL-3',
 }

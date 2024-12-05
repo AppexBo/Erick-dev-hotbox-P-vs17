@@ -22,4 +22,5 @@
             'qhantuy_by_appex/static/**/*',
         ],
     },
+    'license': 'AGPL-3',
 }
