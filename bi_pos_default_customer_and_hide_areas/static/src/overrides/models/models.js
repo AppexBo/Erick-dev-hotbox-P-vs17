@@ -43,6 +43,16 @@ patch(Order.prototype, {
                 }
             }
             */
+            const buttonValidate = document.querySelector('.button.next.validation');
+            if (buttonValidate && buttonValidate.textContent.trim() === "Nueva orden") {
+                buttonValidate.click(); // Simula un clic en el botón
+            }else{
+                //para tablets pequenas
+                const buttonValidate1 = document.querySelector('.btn-switchpane.validation-button');
+                if(buttonValidate1 && buttonValidate1.textContent.trim() === "Nueva orden"){
+                    buttonValidate1.click(); // Simula un clic en el botón
+                }
+            }
         });
         
         // Observar cambios en el DOM dentro del contenedor principal
