@@ -33,26 +33,16 @@ patch(Order.prototype, {
             
             const buttonValidate = document.querySelector('.button.next.validation');
             if (buttonValidate && buttonValidate.textContent.trim() === "Nueva orden") {
-                //colocar una pantalla de carga
-                this.insert_generate_load_view();
-                
                 setTimeout(() => {
                     buttonValidate.click(); // Simula un clic en el botón después de 10 segundos
-                }, 10000);
-
-                this.remove_generate_load_view()
-                
+                }, 1000);
             }else{
                 //para tablets pequenas
                 const buttonValidate1 = document.querySelector('.btn-switchpane.validation-button');
                 if(buttonValidate1 && buttonValidate1.textContent.trim() === "Nueva orden"){
-                    //colocar una pantalla de carga
-                    this.insert_generate_load_view();
                     setTimeout(() => {
                         buttonValidate1.click(); // Simula un clic en el botón después de 10 segundos
-                    }, 10000);
-                    
-                    this.remove_generate_load_view()
+                    }, 1000);
                 }
             }
         });
@@ -62,44 +52,6 @@ patch(Order.prototype, {
             childList: true,
             subtree: true
         });
-    },
-
-    insert_generate_load_view(){
-        // Crear un div para el spinner
-        var spinner = document.createElement('div');
-        spinner.id = 'loader_qhuantuy';
-        spinner.style.position = 'fixed';
-        spinner.style.top = '0';
-        spinner.style.left = '0';
-        spinner.style.width = '100%';
-        spinner.style.height = '100%';
-        spinner.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
-        spinner.style.zIndex = '9999';
-        spinner.style.display = 'flex';
-        spinner.style.justifyContent = 'center';
-        spinner.style.alignItems = 'center';
-
-        // Añadir texto o un spinner de carga
-        spinner.innerHTML = '<div class="loader" style="border: 16px solid #f3f3f3; border-top: 16px solid #3498db; border-radius: 50%; width: 60px; height: 60px; animation: spin 2s linear infinite;"></div>';
-
-        // Estilos de la animación
-        var style = document.createElement('style');
-        style.innerHTML = `
-        @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-        }
-        `;
-        document.head.appendChild(style);
-        // Añadir el spinner al cuerpo
-        document.body.appendChild(spinner);
-    },
-
-    remove_generate_load_view(){
-        //buscar el loader
-        var spinner = document.getElementById('loader_qhuantuy');
-        // Eliminar el spinner
-        document.body.removeChild(spinner);
     },
 
     camposDeLaVistaUno(pos){
