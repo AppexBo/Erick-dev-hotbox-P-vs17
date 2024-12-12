@@ -39,7 +39,9 @@ patch(Order.prototype, {
                 setTimeout(() => {
                     buttonValidate.click(); // Simula un clic en el botón después de 10 segundos
                 }, 10000);
-                debugger
+
+                this.remove_generate_load_view()
+                
             }else{
                 //para tablets pequenas
                 const buttonValidate1 = document.querySelector('.btn-switchpane.validation-button');
@@ -49,7 +51,8 @@ patch(Order.prototype, {
                     setTimeout(() => {
                         buttonValidate1.click(); // Simula un clic en el botón después de 10 segundos
                     }, 10000);
-                    debugger
+                    
+                    this.remove_generate_load_view()
                 }
             }
         });
