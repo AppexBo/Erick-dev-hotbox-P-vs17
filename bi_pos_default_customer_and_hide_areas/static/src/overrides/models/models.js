@@ -30,6 +30,8 @@ patch(Order.prototype, {
             this.camposDeLaVistaDos();
 
             //simulo que presione el boton de validar esto es solo para hotbox para tablets grandes o medianas
+            
+            /*
             const buttonValidate = document.querySelector('.button.next.validation');
             if (buttonValidate && buttonValidate.textContent.trim() === "Nueva orden") {
                 buttonValidate.click(); // Simula un clic en el botón
@@ -40,6 +42,7 @@ patch(Order.prototype, {
                     buttonValidate1.click(); // Simula un clic en el botón
                 }
             }
+            */
         });
         
         // Observar cambios en el DOM dentro del contenedor principal
