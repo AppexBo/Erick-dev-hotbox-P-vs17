@@ -7,7 +7,7 @@ patch(Order.prototype, {
 
     setup() {
         super.setup(...arguments);
-        
+
         var default_customer = this.pos.config.res_partner_id;
         var default_customer_by_id = this.pos.db.get_partner_by_id(default_customer[0]);
         
@@ -21,8 +21,6 @@ patch(Order.prototype, {
         this.changePos(this.pos);
     },
 
-    
-    
     changePos(pos){
         // Crear un MutationObserver para observar cambios en el DOM
         const observer = new MutationObserver(() => {            
@@ -42,58 +40,15 @@ patch(Order.prototype, {
         });
     },
 
-
-    
-
-        
-
-
-
-
-    insert_generate_load_view(){
-        // Crear un div para el spinner
-        var spinner = document.createElement('div');
-        spinner.id = 'loader_qhuantuy';
-        spinner.style.position = 'fixed';
-        spinner.style.top = '0';
-        spinner.style.left = '0';
-        spinner.style.width = '100%';
-        spinner.style.height = '100%';
-        spinner.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
-        spinner.style.zIndex = '9999';
-        spinner.style.display = 'flex';
-        spinner.style.justifyContent = 'center';
-        spinner.style.alignItems = 'center';
-
-        // Añadir texto o un spinner de carga
-        spinner.innerHTML = '<div class="loader" style="border: 16px solid #f3f3f3; border-top: 16px solid #3498db; border-radius: 50%; width: 60px; height: 60px; animation: spin 2s linear infinite;"></div>';
-
-        // Estilos de la animación
-        var style = document.createElement('style');
-        style.innerHTML = `
-        @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-        }
-        `;
-        document.head.appendChild(style);
-        // Añadir el spinner al cuerpo
-        document.body.appendChild(spinner);
-    },
-
-    remove_generate_load_view(){
-        //buscar el loader
-        var spinner = document.getElementById('loader_qhuantuy');
-        // Eliminar el spinner
-        document.body.removeChild(spinner);
-    },
-
     camposDeLaVistaTres(){
         const h1Elements = document.querySelectorAll('h1'); // Selecciona todos los <h1>
         const count = [...h1Elements].filter(h1 => h1.textContent.trim() === 'Pago exitoso').length;
+        
+        
 
         const buttonValidate = document.querySelector('.button.next.validation');
         if (buttonValidate && count === 1) {
+            
             const campo_receipt = document.querySelector('.pos-receipt-container');
             if(campo_receipt){
                 campo_receipt.setAttribute('style', 'display: none !important;');
@@ -104,10 +59,19 @@ patch(Order.prototype, {
             }
             const campo_monto = document.querySelector('.top-content.d-flex');
             if(campo_monto){
-                campo_monto.setAttribute('style', 'display: none !important;');
+                campo_monto.classList.remove('border-bottom');
+                const titulo = campo_monto.querySelector('h1'); // Busca el h1 dentro del elemento
+                if (titulo && titulo.textContent.trim() != 'Presione para nueva compra 🟢⬇️') {
+                    titulo.textContent = "Presione para nueva compra 🟢⬇️"; // Cambia el texto del h1
+                    this.changeTextHeader("POR FAVOR, ESCANEE SUS PRODUCTOS", "Gracias por su compra");
+                }
+                //campo_monto.setAttribute('style', 'display: none !important;');
             }
-
-            this.center_button_next_order(buttonValidate);
+            buttonValidate.addEventListener('click', () => {
+                this.changeTextHeader("Gracias por su compra", "POR FAVOR, ESCANEE SUS PRODUCTOS");
+            });
+            //buttonValidate.setAttribute('style', 'display: none !important;');
+            
         }else{
             //para tablets pequenas
             const buttonValidate1 = document.querySelector('.btn-switchpane.validation-button');
@@ -118,22 +82,45 @@ patch(Order.prototype, {
                 }
                 const campo_pago_exitoso = document.querySelector('.d-flex.flex-column.m-4');
                 if(campo_pago_exitoso){
-                    campo_pago_exitoso.setAttribute('style', 'display: none !important;');
+                    campo_pago_exitoso.setAttribute('style', 'text-align: center !important;');
                 }
-                const campo_monto = document.querySelector('.top-content.d-flex');
-                if(campo_monto){
-                    campo_monto.setAttribute('style', 'display: none !important;');
+                
+                if(campo_pago_exitoso){
+                    let titulo = null;
+
+                    campo_pago_exitoso.childNodes.forEach(element => {
+                        if (element.nodeType === 1) { // Verifica que sea un elemento HTML
+                            if (element.tagName.toLowerCase() === 'h1') {
+                                titulo = element; // Captura el primer h1 encontrado
+                            } else {
+                                element.setAttribute('style', 'display: none !important;');
+                            }
+                        }
+                    });
+
+                    if (titulo && titulo.textContent.trim() != 'Presione para nueva compra 🟢⬇️') {
+                        titulo.textContent = "Presione para nueva compra 🟢⬇️"; // Cambia el texto del h1
+                        this.changeTextHeader("POR FAVOR, ESCANEE SUS PRODUCTOS", "Gracias por su compra");
+                    }
+                    //campo_monto.setAttribute('style', 'display: none !important;');
                 }
-                this.center_button_next_order(buttonValidate1);
+                buttonValidate1.addEventListener('click', () => {
+                    this.changeTextHeader("Gracias por su compra", "POR FAVOR, ESCANEE SUS PRODUCTOS");
+                });
+                //buttonValidate1.setAttribute('style', 'display: none !important;');
             }
         }
     },
 
-    center_button_next_order(button_next_order){
-        button_next_order.setAttribute('style', 'position: fixed !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; display: flex !important; justify-content: center !important; align-items: center !important; z-index: 99999 !important;');
-        button_next_order.textContent = 'Presione para iniciar la compra'; 
+    changeTextHeader(text1, text2){         
+        const spans = [...document.querySelectorAll("span")];
+        const spanEncontrado = spans.find(span => span.textContent.trim() === text1);
+
+        if(spanEncontrado){
+            spanEncontrado.textContent = text2;
+        }
     },
-    
+
     camposDeLaVistaUno(pos){
         // Buscar y cambiar el campo donde esta el logo de odoo
         //PASA ALGO ACA HAY Q LEER BIEN EL CODIGO
@@ -211,7 +198,7 @@ patch(Order.prototype, {
 
     drawNewLogoAndText(pos_branding){
         //const html_add = '<div class="pos-branding d-flex justify-content-start flex-grow-1 h-100 p-0 my-0 text-start" style="max-width: 100% !important; width: 100% !important;"><img class="pos-logo h-75 ms-3 me-auto align-self-center" src="/web/static/img/logo.png" alt="Logo" style="display: none;"><div class="d-flex flex-md-row align-items-center justify-content-center" style="width: 100%;"><span class="mt-3 mt-md-0 ms-md-3 text-center" style="font-size: 24px; font-weight: bold;">POR FAVOR, ESCANEE SUS PRODUCTOS</span><img src="/bi_pos_default_customer_and_hide_areas/static/description/logo_hotbox.jpg" alt="NewLogo" class="img-fluid" style="max-width: 150px;"></div></div>';
-        const html_add = '<div class="pos-branding d-flex justify-content-start flex-grow-1 h-100 p-0 my-0 text-start" style="max-width: 100% !important; width: 100% !important;"><img class="pos-logo h-75 ms-3 me-auto align-self-center" src="/web/static/img/logo.png" alt="Logo" style="display: none;"><div class="d-flex flex-md-row align-items-center justify-content-center" style="width: 100%;"><img src="/bi_pos_default_customer_and_hide_areas/static/description/logo_hotbox.jpg" alt="NewLogo" class="img-fluid" style="max-width: 150px;"><span class="mt-3 mt-md-0 ms-md-3 text-center" style="font-size: 24px; font-weight: bold;">POR FAVOR, ESCANEE SUS PRODUCTOS</span></div></div>';
+        const html_add = '<div class="pos-branding d-flex justify-content-start flex-grow-1 h-100 p-0 my-0 text-start" style="max-width: 100% !important; width: 100% !important;"><img class="pos-logo h-75 ms-3 me-auto align-self-center" src="/web/static/img/logo.png" alt="Logo" style="display: none;"><div class="d-flex flex-md-row align-items-center" style="width: 100%;"><img src="/bi_pos_default_customer_and_hide_areas/static/description/logo_hotbox.jpg" alt="NewLogo" class="img-fluid" style="max-width: 150px;"><span class="mt-3 mt-md-0 ms-md-3 text-center" style="font-size: clamp(16px, 2vw, 24px); font-weight: bold;">POR FAVOR, ESCANEE SUS PRODUCTOS</span></div></div>';
         // Insertar el HTML directamente
         pos_branding.insertAdjacentHTML('afterbegin', html_add);
     },
